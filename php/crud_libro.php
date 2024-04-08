@@ -12,11 +12,10 @@ class CrudLibro
   public function insertar($libro)
   {
     $mysqli = Db::conectar();
-    $comando = "INSERT INTO libros (nombre, autor, anio_edicion)
-VALUES (?, ?, ?)";
+    $comando = "INSERT INTO libros (nombre, autor, anio_edicion,editorial) VALUES (?, ?, ?, ?)";
     $stmt = $mysqli->stmt_init();
     $stmt->prepare($comando);
-    $stmt->bind_param("sss", $libro->getNombre(), $libro->getAutor(), $libro->getAnio_edicion());
+    $stmt->bind_param("ssss", $libro->getNombre(), $libro->getAutor(), $libro->getAnio_edicion(), $libro->getEditorial());
     $stmt->execute();
     $stmt->close();
     $mysqli->close();
@@ -35,6 +34,7 @@ VALUES (?, ?, ?)";
       $myLibro->setNombre($fila['nombre']);
       $myLibro->setAutor($fila['autor']);
       $myLibro->setAnio_edicion($fila['anio_edicion']);
+      $myLibro->setEditorial($fila['editorial']);
       $listaLibros[] = $myLibro;
     }
     $mysqli->close();
@@ -64,6 +64,8 @@ VALUES (?, ?, ?)";
     $myLibro->setNombre($libro['nombre']);
     $myLibro->setAutor($libro['autor']);
     $myLibro->setAnio_edicion($libro['anio_edicion']);
+    $myLibro->setEditorial($libro['editorial']);
+    
     $mysqli->close();
     return $myLibro;
   }
@@ -71,13 +73,46 @@ VALUES (?, ?, ?)";
   public function actualizar($libro)
   {
     $mysqli = Db::conectar();
-    $comando = "UPDATE libros SET nombre=?,
-autor=?,anio_edicion=? WHERE id=?";
+    $comando = "UPDATE libros SET nombre=?,autor=?,anio_edicion=?,editorial=? WHERE id=?";
     $stmt = $mysqli->stmt_init();
     $stmt->prepare($comando);
-    $stmt->bind_param("sssi", $libro->getNombre(), $libro->getAutor(), $libro->getAnio_edicion(), $libro->getId());
+    $stmt->bind_param("ssssi", $libro->getNombre(), $libro->getAutor(), $libro->getAnio_edicion(), $libro->getEditorial(), $libro->getId());
     $stmt->execute();
     $stmt->close();
     $mysqli->close();
   }
+
+  public function getBooksByField($searchType, $searchValue)
+  {
+    $mysqli = Db::conectar();
+    $listaLibros = [];
+
+    $comando = "SELECT * FROM libros WHERE $searchType LIKE ?";
+    $stmt = $mysqli->prepare($comando);
+
+    if ($stmt === false) {
+      die('Error: ' . htmlspecialchars($mysqli->error));
+    }
+
+    $param = '%' . $searchValue . '%';
+    $stmt->bind_param("s", $param);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($fila = $result->fetch_array(MYSQLI_ASSOC)) {
+      $myLibro = new Libro();
+      $myLibro->setId($fila['id']);
+      $myLibro->setNombre($fila['nombre']);
+      $myLibro->setAutor($fila['autor']);
+      $myLibro->setAnio_edicion($fila['anio_edicion']);
+      $myLibro->setEditorial($fila['editorial']);
+      $listaLibros[] = $myLibro;
+    }
+
+    $stmt->close();
+    $mysqli->close();
+
+    return $listaLibros;
+  }
+
 }

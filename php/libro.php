@@ -5,6 +5,7 @@ class Libro
   private $nombre;
   private $autor;
   private $anio_edicion;
+  private $editorial;
   function __construct()
   {
   }
@@ -32,6 +33,12 @@ class Libro
   {
     $this->anio_edicion = $anio_edicion;
   }
+  public function getEditorial () {
+    return $this->editorial;
+  }
+  public function setEditorial($editorial) {
+    $this->editorial = $editorial;
+  }
   public function getId()
   {
     return $this->id;
@@ -47,8 +54,9 @@ class Libro
           <td>' . $this->getNombre() . '</td>
           <td>' . $this->getAutor() . '</td>
           <td>' . $this->getAnio_edicion() . '</td>
+          <td>' . $this->getEditorial() . '</td>
           <td><a class="btn btn-circle btn-warning" href="./php/actualizar.php?id=' . $this->getId() . '&accion=a"><i class="fas fa-pen"></i></a> <a class="btn btn-circle btn-danger" href="./php/administrar_libro.php?id=' . $this->getId() . '&accion=e"><i class="fas fa-trash"></i></a> </td>
-        </tr>
+    </tr>
     ';
   }
 }

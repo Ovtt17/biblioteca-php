@@ -3,6 +3,12 @@ require_once('php/crud_libro.php');
 require_once('php/libro.php');
 
 $crud = new CrudLibro();
+function printBooks($listaLibros)
+{
+    foreach ($listaLibros as $libro) {
+        echo $libro->mostrarLibro();
+    }
+}
 $listaLibros = $crud->mostrar();
 ?>
 
@@ -10,7 +16,6 @@ $listaLibros = $crud->mostrar();
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -45,7 +50,7 @@ $listaLibros = $crud->mostrar();
                 <div class="container-fluid">
 
                     <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
+                    <div class="card shadow mb-4 ">
                         <div class="card-header py-3">
                             <h1 class="m-0 font-weight-bold text-primary">Libros</h1>
                         </div>
@@ -54,12 +59,26 @@ $listaLibros = $crud->mostrar();
                                 <div class="d-flex justify-content-end">
                                     <a class="btn btn-primary mb-3" href="php/ingresar.php"><i>Agregar</i></a>
                                 </div>
-                                <table class=" table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <form class="form-inline d-flex justify-content-end mb-2" method="get" action="./php/search.php">
+                                    <label class="mr-2">Search:</label>
+                                    <select id="searchType" name="searchType" class="form-control form-control-sm mr-2">
+                                        <option value="nombre">Nombre</option>
+                                        <option value="autor">Autor</option>
+                                        <option value="anio_edicion">Edición</option>
+                                        <option value="editorial">Editorial</option>
+                                    </select>
+                                    <input id="searchInput" name="searchValue" type="search" class="form-control form-control-sm">
+                                    <button type="submit" id="search" class="btn btn-primary ml-2">Buscar</button>
+                                </form>
+
+
+                                <table class=" table table-bordered" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
                                             <th>Nombre</th>
                                             <th>Autor</th>
                                             <th>Edicion</th>
+                                            <th>Editorial</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
@@ -68,13 +87,14 @@ $listaLibros = $crud->mostrar();
                                             <th>Nombre</th>
                                             <th>Autor</th>
                                             <th>Edicion</th>
+                                            <th>Editorial</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                        <?php foreach ($listaLibros as $libro) {
-                                            echo $libro->mostrarLibro();
-                                        } ?>
+                                        <?php
+                                        printBooks($listaLibros);
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -143,6 +163,8 @@ $listaLibros = $crud->mostrar();
 
     <!-- Page level custom scripts -->
     <script src="js/demo/datatables-demo.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/search.js"></script>
 
 </body>
 
