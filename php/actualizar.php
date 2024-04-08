@@ -53,8 +53,12 @@ $libro = $crud->obtenerLibro($_GET['id']);
                   <input type='text' id="autor" name='autor' class="form-control" value='<?php echo $libro->getAutor() ?>'>
                 </div>
                 <div class="form-group">
-                  <label for="edicion">Fecha Edición:</label>
-                  <input type='text' id="edicion" name='edicion' class="form-control" value='<?php echo $libro->getAnio_edicion() ?>'>
+                  <label for="anio_edicion">Fecha Edición:</label>
+                  <input type='text' id="anio_edicion" name='anio_edicion' class="form-control" value='<?php echo $libro->getAnio_edicion() ?>'>
+                </div>
+                <div class="form-group">
+                  <label for="editorial">Editorial:</label>
+                  <input type='text' id="editorial" name='editorial' class="form-control" value='<?php echo $libro->getEditorial() ?>'>
                 </div>
                 <input type='hidden' name='actualizar' value='actualizar'>
                 <div class="d-flex justify-content-center">
